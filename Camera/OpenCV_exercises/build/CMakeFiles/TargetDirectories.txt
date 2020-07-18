@@ -1,0 +1,7 @@
+/home/workspace/OpenCV_exercises/build/CMakeFiles/rebuild_cache.dir
+/home/workspace/OpenCV_exercises/build/CMakeFiles/edit_cache.dir
+/home/workspace/OpenCV_exercises/build/CMakeFiles/load_image_2.dir
+/home/workspace/OpenCV_exercises/build/CMakeFiles/load_image_3.dir
+/home/workspace/OpenCV_exercises/build/CMakeFiles/change_pixels.dir
+/home/workspace/OpenCV_exercises/build/CMakeFiles/create_matrix.dir
+/home/workspace/OpenCV_exercises/build/CMakeFiles/load_image_1.dir
