@@ -33,8 +33,8 @@ v_target = 20;
 % chirp using the requirements above.
 
 B = c/(2*R_res);            % Bandwidth (B)
-T_chirp = 5.5*2*R_max/c;    % Bandwidth (B)
-slope = B/T_chirp;          % Bandwidth (B)
+Tchirp = 5.5*2*R_max/c;    % Bandwidth (B)
+slope = B/Tchirp;          % Bandwidth (B)
                                                           
 %The number of chirps in one sequence. Its ideal to have 2^ value for the ease of running the FFT
 %for Doppler Estimation. 
@@ -88,18 +88,22 @@ end
  % *%TODO* :
 %reshape the vector into Nr*Nd array. Nr and Nd here would also define the size of
 %Range and Doppler FFT respectively.
+Mix = reshape(Mix, [Nr, Nd]);
 
  % *%TODO* :
 %run the FFT on the beat signal along the range bins dimension (Nr) and
 %normalize.
+sig_fft1 = fft(Mix, Nr);
+sig_fft1 = sig_fft1./Nr;
 
  % *%TODO* :
 % Take the absolute value of FFT output
+sig_fft1 = abs(sig_fft1);
 
  % *%TODO* :
 % Output of FFT is double sided signal, but we are interested in only one side of the spectrum.
 % Hence we throw out half of the samples.
-
+sig_fft1 = fft(1 : Nr/2 +1);
 
 %plotting the range
 figure ('Name','Range from First FFT')
@@ -107,8 +111,7 @@ subplot(2,1,1)
 
  % *%TODO* :
  % plot FFT output 
-
- 
+plot(sig_fft1);
 axis ([0 200 0 1]);
 
 
@@ -125,7 +128,7 @@ axis ([0 200 0 1]);
 % doppler FFT bins. So, it is important to convert the axis from bin sizes
 % to range and doppler based on their Max values.
 
-Mix=reshape(Mix,[Nr,Nd]);
+Mix = reshape(Mix,[Nr,Nd]);
 
 % 2D FFT using the FFT size for both dimensions.
 sig_fft2 = fft2(Mix,Nr,Nd);
@@ -134,7 +137,7 @@ sig_fft2 = fft2(Mix,Nr,Nd);
 sig_fft2 = sig_fft2(1:Nr/2,1:Nd);
 sig_fft2 = fftshift (sig_fft2);
 RDM = abs(sig_fft2);
-RDM = 10*log10(RDM) ;
+RDM = 10*log10(RDM);
 
 %use the surf function to plot the output of 2DFFT and to show axis in both
 %dimensions
