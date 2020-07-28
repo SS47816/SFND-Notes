@@ -33,9 +33,9 @@ v_target = 20;
 % Calculate the Bandwidth (B), Chirp Time (Tchirp) and Slope (slope) of the FMCW
 % chirp using the requirements above.
 
-B = c/(2*R_res);
-Tchirp = 5.5*2*R_max/c;
-slope = B/Tchirp;
+B = c/(2*R_res)
+Tchirp = 5.5*2*R_max/c
+slope = B/Tchirp
                                                           
 %The number of chirps in one sequence. Its ideal to have 2^ value for the ease of running the FFT
 %for Doppler Estimation. 
@@ -89,13 +89,12 @@ end
  % *%TODO* :
 %reshape the vector into Nr*Nd array. Nr and Nd here would also define the size of
 %Range and Doppler FFT respectively.
-Mix = reshape(Mix, [Nr, Nd]);
+Mix = reshape(Mix, [Nr,Nd]);
 
  % *%TODO* :
 %run the FFT on the beat signal along the range bins dimension (Nr) and
 %normalize.
-sig_fft1 = fft(Mix, Nr);
-sig_fft1 = sig_fft1./Nr;
+sig_fft1 = fft(Mix, Nr)./Nr;
 
  % *%TODO* :
 % Take the absolute value of FFT output
@@ -104,11 +103,11 @@ sig_fft1 = abs(sig_fft1);
  % *%TODO* :
 % Output of FFT is double sided signal, but we are interested in only one side of the spectrum.
 % Hence we throw out half of the samples.
-sig_fft1 = fft(1 : Nr/2);
+sig_fft1 = sig_fft1(1 : Nr/2);
 
 %plotting the range
 figure ('Name','Range from First FFT')
-%subplot(2,1,1)
+subplot(2,1,1)
 
  % *%TODO* :
  % plot FFT output 
