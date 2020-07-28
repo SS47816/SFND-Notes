@@ -38,11 +38,10 @@ x = 25
 y = 45
 z = x-y
 
-x = db2pow(x)
-y = db2pow(y)
-z = db2pow(z)
+xdb = db2pow(x)
+ydb = db2pow(y)
+zdb = db2pow(z)
 
 z = xdb / ydb
-w = db2pow(-6.0566)
-thresh = db2pow(-3.0)
+w = db2pow(-6.0566
 

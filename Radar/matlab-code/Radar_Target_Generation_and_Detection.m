@@ -113,6 +113,9 @@ subplot(2,1,1)
  % plot FFT output 
 plot(sig_fft1);
 axis ([0 200 0 1]);
+title('1D FFT Output');
+xlabel('Range (m)');
+ylabel('Amplitude');
 
 
 
@@ -141,9 +144,15 @@ RDM = 10*log10(RDM);
 
 %use the surf function to plot the output of 2DFFT and to show axis in both
 %dimensions
+
 doppler_axis = linspace(-100,100,Nd);
 range_axis = linspace(-200,200,Nr/2)*((Nr/2)/400);
-figure,surf(doppler_axis,range_axis,RDM);
+figure ('Name','2D FFT Output')
+surf(doppler_axis,range_axis,RDM);
+title('2D FFT Output RDM');
+xlabel('Velocity (m/s)');
+ylabel('Range (m)');
+zlabel('Signal Strength (dB)');
 
 %% CFAR implementation
 
@@ -152,7 +161,7 @@ figure,surf(doppler_axis,range_axis,RDM);
 % *%TODO* :
 %Select the number of Training Cells in both the dimensions.
 Tr = 12;
-Td = 7;
+Td = 9;
 
 % *%TODO* :
 %Select the number of Guard Cells in both dimensions around the Cell under 
@@ -162,7 +171,7 @@ Gd = 3;
 
 % *%TODO* :
 % offset the threshold by SNR value in dB
-SNR = 100.0;
+SNR = pow2db(2.1);
 
 % *%TODO* :
 %Create a vector to store noise_level for each iteration on training cells
@@ -183,14 +192,17 @@ noise_level = zeros(1,1);
 
 % Use RDM[x,y] as the matrix from the output of 2D FFT for implementing
 % CFAR
-RDM = RDM/max(max(RDM));
+
+% Normalise radar measurement to [0, 1]
+max_element = max(max(RDM)); % max element in db
+RDM = RDM - max_element; % normalise in pow
 
 % loop through all cells in range direction
 for i = Tr+Gr+1 : Nr/2-(Gr+Tr)
     % loop through all cells in doppler direction
     for j = Td+Gd+1 : (Nd)-(Gd+Td)
         
-        noise_level = zeros(1,1); % reset noise level to zero
+        noise_level = zeros(1,1); % reset noise level to zero for every literation
         % loop through the selected window
         for r = i-(Tr+Gr) : i+(Tr+Gr)
             for d = j-(Td+Gd) : j+(Td+Gd)
@@ -206,10 +218,11 @@ for i = Tr+Gr+1 : Nr/2-(Gr+Tr)
         % noise threshold
         noise_threshold = pow2db(noise_level/num_T_cells);
         %Add the SNR to the threshold
-        noise_threshold = SNR*noise_threshold ;
+        noise_threshold = SNR + noise_threshold; % use plus instead of times here cuz in log
         
         %Measure the signal in Cell Under Test(CUT) and compare against
-        if (RDM(i,j) < noise_threshold)
+        CUT = RDM(i,j);
+        if (CUT < noise_threshold)
             RDM(i,j) = 0;
         else
             RDM(i,j) = 1;
@@ -233,9 +246,13 @@ RDM(:, end-(Td+Gd-1):end) = 0;
 % *%TODO* :
 %display the CFAR output using the Surf function like we did for Range
 %Doppler Response output.
-figure,surf(doppler_axis,range_axis,RDM);
+figure('Name', 'CA-CFAR Filtered RDM')
+surf(doppler_axis,range_axis,RDM);
 colorbar;
-
+title('CA-CFAR Filtered RDM');
+xlabel('Velocity (m/s)');
+ylabel('Range (m)');
+zlabel('Normalized Amplitude [0,1]');
 
  
  
